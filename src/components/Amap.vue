@@ -2,6 +2,11 @@
 import loadJs from '../helper/loadJs'
 import { Zoom11, NJ_lNG_LAT } from '../constant/index'
 export default {
+    data() {
+        return {
+            map: null
+        }
+    },
     mounted() {
         console.log(5, Zoom11)
         loadJs('https://webapi.amap.com/loader.js').then((res) => {
@@ -20,20 +25,18 @@ export default {
                 // },
             }).then((AMap)=>{
                 console.log(21, AMap)
-                var map = new AMap.Map('amap-box', {
+                this.map = new AMap.Map('amap-box', {
                     // viewMode: '2D', // 默认使用 2D 模式，如果希望使用带有俯仰角的 3D 模式，请设置 viewMode: '3D',
                     zoom: Zoom11, //初始化地图层级
                     center: [NJ_lNG_LAT.lng, NJ_lNG_LAT.lat] //初始化地图中心点
                 });
-                map.addControl(new AMap.Scale());
-                map.addControl(new AMap.ToolBar());
-                map.addControl(new AMap.MapType());
+                this.map.addControl(new AMap.Scale());
+                this.map.addControl(new AMap.ToolBar());
+                this.map.addControl(new AMap.MapType());
 
-                map.on("complete", function(){
+                this.map.on("complete", function(){
                     console.log("地图加载完成！");  
                 });
-
-                app.config.globalProperties.$map = map;
             }).catch((e)=>{
                 console.error(e);  //加载错误提示
             }); 
@@ -41,6 +44,7 @@ export default {
     },
     methods: {
         addCanvas() {
+            console.log(44, this.map)
             /*
             * 添加Canvas图层
             */
@@ -79,7 +83,8 @@ export default {
                 zooms: [3, 18],
             });
 
-            map.addLayer(CanvasLayer);
+            this.map.addLayer(CanvasLayer);
+            // this.map.addLayer(CanvasLayer);
             draw();
         }
     }
@@ -89,7 +94,7 @@ export default {
 <template>
   <div id="amap-box" class="map"></div>
   <div>
-      <button @click="add">添加canvas图层</button>
+      <button @click="addCanvas">添加canvas图层</button>
   </div>
 </template>
 
